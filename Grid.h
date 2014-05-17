@@ -36,7 +36,8 @@ class Grid
   //Alternate constructor:
   Grid(
         int                   rows,
-        int                   columns);
+        int                   columns,
+        vector< vector<int> > &matrix);
 
   Grid(const Grid &obj); //copy constructor
 
@@ -49,9 +50,6 @@ class Grid
     int                   getRows()    const ;
     int                   getColumns() const ;
     
-    bool areMoreMoves() const ;
-    bool isGameWon() const;
-    bool isLegalMove(int startPosRow,int startPosColumn,int endPosRow,int endPosColumn) const ;
   // ------------------------------------------------------
   // ----- Mutators ---------------------------------------
   // ------------------------------------------------------
@@ -59,8 +57,6 @@ class Grid
     void setGrid(   const vector< vector<int> > &grid) ;
     void setRows(   const int                   &rows) ;
     void setColumns(const int                   &columns) ;
-    void removePeg(int row, int column);
-    void applyMove(int startPosRow, int startPosColumn, int endPosRow, int endPosColumn) ;
   
   // ------------------------------------------------------
   // ----- Facilitators -----------------------------------

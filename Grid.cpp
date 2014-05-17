@@ -31,18 +31,28 @@ Grid::Grid()
 {//Default constructor
   rows_    = 5; //default to size 5 grid
   columns_ = 5;
-	grid_.resize(columns_+1, vector<int>(rows_+1, 1)); //create grid of 1's
+	grid_.resize(columns_, vector<int>(rows_, 0)); //create grid of 0's
 }
 
 Grid::Grid(
     int  rows,
-    int  columns)
+    int  columns,
+    vector< vector<int> > &matrix)
 {//Alternate Constructor:
   rows_    = rows;
   columns_ = columns;
+  grid_.resize(columns_, vector<int>(rows_, 0)); //create grid of 0's
   
-  //we are not using row and column 0
-  grid_.resize(columns+1, vector<int>(rows+1, 1)); //create grid of 1's
+  for (int ii = 0; ii < rows_; ii++)
+  {//go through each row
+		for (int jj = 0; jj < columns_; jj++)
+		{//go through each column in a row and print peg
+			grid_[ii][jj] = matrix[ii][jj];
+			
+			
+			
+		}
+	}
 }
 
 Grid::Grid(const Grid &obj)
@@ -70,78 +80,6 @@ int Grid::getColumns() const
   return columns_;
 }
 
-bool Grid::areMoreMoves() const
-{//check to see if there are legal moves left
-	for (int ii = 1; ii <= rows_; ii++)
-  {//go through the rows
-		for (int jj = 1; jj <= columns_; jj++)
-		{//go through the columns
-			//now check each of the 8 positions around this square
-			//starting with upper left and working clockwise
-			//if we find any legal move then just return true
-			if (isLegalMove(ii-1, jj-1, ii+1, jj+1)) return true; //start upper left
-			if (isLegalMove(ii-1, jj  , ii+1, jj  )) return true; //start above
-			if (isLegalMove(ii-1, jj+1, ii+1, jj-1)) return true; //start upper right
-			if (isLegalMove(ii  , jj+1, ii  , jj-1)) return true; //start right
-			if (isLegalMove(ii+1, jj+1, ii-1, jj-1)) return true; //start lower right
-			if (isLegalMove(ii+1, jj  , ii-1, jj  )) return true; //start below
-			if (isLegalMove(ii+1, jj-1, ii-1, jj+1)) return true; //start lower left
-			if (isLegalMove(ii  , jj-1, ii  , jj+1)) return true; //start left
-		}
-	}
-	//never found a legal move after going through each square
-	return false;
-}
-
-bool Grid::isGameWon() const
-{//check to see if the game is won, which means there is exactly 1 peg left
-	int pegCount = 0;
-	for (int ii = 1; ii <= rows_; ii++)
-  {//go through the rows
-		for (int jj = 1; jj <= columns_; jj++)
-		{//go through the columns
-			if (grid_[ii][jj]) pegCount++; //count the pegs
-		}
-	}
-	if (pegCount == 1) return true; //game is only won if there is exactly 1 peg left
-	return false;
-}
-
-
-bool Grid::isLegalMove(int startPosRow, int startPosColumn, int endPosRow, int endPosColumn) const
-{//check to see if move given is legal
-	//return false if any condition isn't met
-	
-	//startPos and endPos are legal positions on the board; 
-	if (startPosRow < 1 || startPosRow > rows_) return false;
-	if (startPosColumn < 1 || startPosColumn > columns_) return false;
-	if (endPosRow < 1 || endPosRow > rows_) return false;
-	if (endPosColumn < 1 || endPosColumn > columns_) return false;
-	
-	//find middle position and distance between start and end:
-	int middlePosRow = (startPosRow + endPosRow) / 2;
-	int middlePosColumn = (startPosColumn + endPosColumn) / 2;
-	int rowDistance = abs(startPosRow - endPosRow);
-	int columnDistance = abs(startPosColumn - endPosColumn);
-	
-	//startPos and endPos are the correct distance apart;
-	if (startPosRow == endPosRow && startPosColumn == endPosColumn) return false;
-	if (rowDistance == 1 || rowDistance > 2) return false;
-	if (columnDistance == 1 || columnDistance > 2) return false;
-	
-	//there is a peg in startPos=(startPosRow,startColumn)
-	if (!grid_[startPosRow][startPosColumn]) return false;
-	
-	//there is a peg in the calculated middle position, and
-	if (!grid_[middlePosRow][middlePosColumn]) return false;
-	
-	//there is no peg in endPos=(endPosRow,endPosColumn)
-	if (grid_[endPosRow][endPosColumn]) return false;
-	
-	//all conditions met, so it is a legal move
-	return true;
-}
-
 // ------------------------------------------------------
 // ----- Mutators ---------------------------------------
 // ------------------------------------------------------
@@ -155,68 +93,28 @@ void Grid::setColumns(const int &columns)
   columns_ = columns;
 }
 
-void Grid::applyMove(int startPosRow, int startPosColumn, int endPosRow, int endPosColumn) 
-{//take in a start and end position, and then makes the move
-	//removes peg from start and middle, then adds peg to end
-	
-	//first confirm this is a legal move:
-	if (!isLegalMove(startPosRow, startPosColumn, endPosRow, endPosColumn)) return;
-	
-	//find middle position from start and end point
-	int middlePosRow = (startPosRow + endPosRow) / 2;
-	int middlePosColumn = (startPosColumn + endPosColumn) / 2;
-	
-	grid_[startPosRow][startPosColumn] = 0;
-	grid_[middlePosRow][middlePosColumn] = 0;
-	grid_[endPosRow][endPosColumn] = 1;
-}
-
-void Grid::removePeg(int row, int column)
-{//remove one peg from a specific position
-	grid_[row][column] = 0;
-}
-
-
 
 // ------------------------------------------------------
 // ----- Facilitators -----------------------------------
 // ------------------------------------------------------
 
 string Grid::display() const
-{//output the grid with formatting
-	char pegSymbol[2] = {' ', 'X'}; //symbols for no peg, and peg respectively
-	char gridLetters[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+{//output the grid with formatting	
+	char fillSymbol[2] = {'.', 'X'}; //symbols for empty, and filled respectively
 	
   ostringstream os; 
   
   os << "\n   ";
-  for (int jj = 1; jj <= columns_; jj++)
-  {//the column numbers along the top
-		os << " "<<jj;
-	}
-	os << "\n  +";
-  for (int jj = 1; jj <= columns_; jj++)
-  {//top spacing bar
-		os << "--";
-	}
-	os<< "-+";
 	
-  for (int ii = 1; ii <= rows_; ii++)
+  for (int ii = 0; ii < rows_; ii++)
   {//go through each row
-		os <<"\n"<<gridLetters[ii]<<" |"; //start the line and add the left border
-		for (int jj = 1; jj <= columns_; jj++)
+		os <<"\n";
+		for (int jj = 0; jj < columns_; jj++)
 		{//go through each column in a row and print peg
-			os << " " << pegSymbol[grid_[ii][jj]];
+			os << "" << fillSymbol[grid_[ii][jj]];
 		}
-		os <<" |"; //right border
 	}
 	
-	os << "\n  +";
-  for (int jj = 1; jj <= columns_; jj++)
-  {//bottom spacing bar
-		os << "--";
-	}
-	os<< "-+";
 	os << "\n";
   return os.str();
 }
