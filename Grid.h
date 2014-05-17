@@ -38,6 +38,8 @@ class Grid
         int                   rows,
         int                   columns,
         vector< vector<int> > &matrix);
+        
+  Grid(string fileName);
 
   Grid(const Grid &obj); //copy constructor
 

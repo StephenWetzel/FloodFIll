@@ -18,6 +18,7 @@
 #include <string> //strings
 #include <sstream> //used to convert streams to strings
 #include <ostream> //output streams
+#include <fstream> //file output
 #include <vector> //vectors
 using namespace std;
 
@@ -54,6 +55,54 @@ Grid::Grid(
 		}
 	}
 }
+
+Grid::Grid(string fileName)
+{//Build grid from file
+	int rows=1;
+	int columns=1;
+	int ii = 0;
+	int jj = 0;
+  grid_.resize(rows, vector<int>(columns, 0)); //create grid of 0's  
+	char ch; //one char from the input file
+	ifstream inFile(fileName);
+	if (inFile.is_open())
+	{//check to see if file successfully opened
+		while (inFile >> noskipws >> ch)
+		{//go through file char by char
+			if (ch == '1')
+			{//a filled cell
+				grid_[ii][jj] = 1;
+				jj++;
+			}
+			else if (ch == '0')
+			{//an empty cell
+				grid_[ii][jj] = 0;
+				jj++;
+			}
+			else if (ch == '\n')
+			{//newline
+				ii++;
+				jj=0;
+			}
+			
+			if (ii >= rows)
+			{//resize grid to add a new row
+				rows = ii+1;
+				grid_.resize(rows);
+				grid_[ii].resize(columns);
+			}
+			if (jj >= columns)
+			{//resize grid to add a new column
+				columns = jj+1;
+				grid_[ii].resize(columns);
+			}
+		}
+		inFile.close();
+		rows_    = rows;
+		columns_ = columns;
+	}
+}
+
 
 Grid::Grid(const Grid &obj)
 {//copy constructor
@@ -100,7 +149,7 @@ void Grid::setColumns(const int &columns)
 
 string Grid::display() const
 {//output the grid with formatting	
-	char fillSymbol[2] = {'.', 'X'}; //symbols for empty, and filled respectively
+	char fillSymbol[2] = {' ', 'X'}; //symbols for empty, and filled respectively
 	
   ostringstream os; 
   
@@ -110,7 +159,7 @@ string Grid::display() const
   {//go through each row
 		os <<"\n";
 		for (int jj = 0; jj < columns_; jj++)
-		{//go through each column in a row and print peg
+		{//go through each column in a row and print cell
 			os << "" << fillSymbol[grid_[ii][jj]];
 		}
 	}

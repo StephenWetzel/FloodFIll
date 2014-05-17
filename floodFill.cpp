@@ -23,7 +23,9 @@ int main(void)
 	
 	Grid testGrid(gridSize, gridSize, matrix);
 	
-	cout << testGrid;
+	Grid fileGrid("sample.txt");
+	
+	cout << fileGrid;
 	
   cout<<"\n\n"; //clean up output
   return 0;
