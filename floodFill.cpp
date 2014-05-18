@@ -9,55 +9,15 @@
 #include <sstream> //used to convert streams to strings
 #include <ostream> //output streams
 #include <vector> //vectors
-#include <ctime> //time stamps
-
-#include <chrono>
-#include <thread>
 using namespace std;
-
-
-void floodFill(Grid &g, int x, int y, int fillType = 2)
-{
-	cout << g;
-	cout << "\n("<<x<<", "<<y<<")";
-	
-	//boundaries:
-	if (x > g.getColumns() || x < 0) return;
-	if (y > g.getRows() || y < 0) return;
-	
-	//std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	if (g[y][x])
-	{//already filled in
-		return;
-	}
-	else
-	{//fill it in
-		g[y][x] = fillType;
-		floodFill(g, x  , y+1, fillType);
-		floodFill(g, x+1, y  , fillType);
-		floodFill(g, x  , y-1, fillType);
-		floodFill(g, x-1, y  , fillType);
-	}
-	return;
-}
 
 
 int main(int argc, char *argv[])
 {
-	int gridSize = 5;
-	
-	vector< vector<int> > matrix = 
-	{{0,0,0,0,0},{0,1,1,1,0},{0,1,0,1,0},{0,1,1,1,0},{0,0,0,0,0}};
-	
-	Grid testGrid(gridSize, gridSize, matrix);
 	
 	Grid fileGrid("sample.txt");
 	
 	cout << fileGrid;
-	//(9,2) is filled
-	//floodFill(fileGrid, 9, 2);
-	//floodFill(fileGrid, 16, 10);
-	//floodFill(fileGrid, 20, 20);
 	int fillColumn;
 	int fillRow;
 	
@@ -75,7 +35,7 @@ int main(int argc, char *argv[])
 		ss2 >> fillRow;
 	}
 	
-	floodFill(fileGrid, fillColumn, fillRow);
+	fileGrid.floodFill(fillColumn, fillRow);
 	
 	cout << fileGrid;
 	

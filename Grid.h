@@ -59,7 +59,9 @@ class Grid
     void setGrid(   const vector< vector<int> > &grid) ;
     void setRows(   const int                   &rows) ;
     void setColumns(const int                   &columns) ;
-  
+		void floodFill(int x, int y, int fillType = 2);
+		
+		
   // ------------------------------------------------------
   // ----- Facilitators -----------------------------------
   // ------------------------------------------------------

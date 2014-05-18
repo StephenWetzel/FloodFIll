@@ -20,7 +20,7 @@
 #include <sstream> //used to convert streams to strings
 #include <ostream> //output streams
 #include <vector> //vectors
-#include "ccc_x11.h"
+#include "ccc_x11.h" // Horstmann's Graphics
 #include "ccc_shap.h"
 using namespace std;
 

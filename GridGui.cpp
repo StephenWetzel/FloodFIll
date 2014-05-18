@@ -20,7 +20,7 @@
 #include <ostream> //output streams
 #include <fstream> //file output
 #include <vector> //vectors
-#include "ccc_x11.h"
+#include "ccc_x11.h" // Horstmann's Graphics
 #include "ccc_shap.h"
 using namespace std;
 
@@ -44,7 +44,7 @@ Grid::Grid(
     int  rows,
     int  columns,
     vector< vector<int> > &matrix)
-{//Alternate Constructor:
+{//pass a vector in to create grid
   rows_    = rows;
   columns_ = columns;
   grid_.resize(columns_, vector<int>(rows_, 0)); //create grid of 0's
@@ -54,9 +54,6 @@ Grid::Grid(
 		for (int jj = 0; jj < columns_; jj++)
 		{//go through each column in a row and print peg
 			grid_[ii][jj] = matrix[ii][jj];
-			
-			
-			
 		}
 	}
 }
@@ -82,19 +79,19 @@ Grid::Grid(string fileName)
 			else if (ch == '0')
 			{//an empty cell
 				grid_[ii][jj] = 0;
-				jj++;
+				jj++; //count this column
 			}
 			else if (ch == '\n')
 			{//newline
-				ii++;
-				jj=0;
+				ii++; //count this row
+				jj=0; //reset column
 			}
 			
 			if (ii >= rows)
 			{//resize grid to add a new row
-				rows = ii+1;
+				rows = ii+1; //start counting at 1
 				grid_.resize(rows);
-				grid_[ii].resize(columns);
+				grid_[ii].resize(columns); //resize this row to full column width
 			}
 			if (jj >= columns)
 			{//resize grid to add a new column
@@ -160,10 +157,10 @@ void Grid::floodFill(int x, int y, int fillType)
 	else
 	{//fill it in
 		grid_[y][x] = fillType;
-		this->floodFill(x  , y+1, fillType);
-		this->floodFill(x+1, y  , fillType);
-		this->floodFill(x  , y-1, fillType);
-		this->floodFill(x-1, y  , fillType);
+		this->floodFill(x  , y+1, fillType); //above
+		this->floodFill(x+1, y  , fillType); //to the right
+		this->floodFill(x  , y-1, fillType); //below
+		this->floodFill(x-1, y  , fillType); //to the left
 	}
 	return;
 }
@@ -179,7 +176,7 @@ void Grid::drawGrid() const
 		for (int jj = 1; jj <= columns_; jj++)
 		{//go through each column in a row and print peg
 			if (grid_[ii][jj])
-			{
+			{//draw a dot
 				Point p(jj + X_SHIFT,  Y_SHIFT - ii);
 				cwin << p << Circle(p, PEG_RADIUS);
 			}

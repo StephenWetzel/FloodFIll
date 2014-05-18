@@ -141,7 +141,26 @@ void Grid::setColumns(const int &columns)
 {
   columns_ = columns;
 }
-
+void Grid::floodFill(int x, int y, int fillType)
+{	
+	//boundaries:
+	if (x > columns_ || x < 0) return;
+	if (y > rows_ || y < 0) return;
+	
+	if (grid_[y][x])
+	{//already filled in
+		return;
+	}
+	else
+	{//fill it in
+		grid_[y][x] = fillType;
+		this->floodFill(x  , y+1, fillType); //above
+		this->floodFill(x+1, y  , fillType); //to the right
+		this->floodFill(x  , y-1, fillType); //below
+		this->floodFill(x-1, y  , fillType); //to the left
+	}
+	return;
+}
 
 // ------------------------------------------------------
 // ----- Facilitators -----------------------------------
@@ -149,7 +168,7 @@ void Grid::setColumns(const int &columns)
 
 string Grid::display() const
 {//output the grid with formatting	
-	char fillSymbol[3] = {' ', 'X', '.', 'O'}; //symbols for empty, and filled respectively
+	char fillSymbol[4] = {' ', 'X', '.', 'O'}; //symbols for empty, and filled respectively
 	
   ostringstream os; 
   
