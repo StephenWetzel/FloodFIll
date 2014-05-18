@@ -98,8 +98,8 @@ Grid::Grid(string fileName)
 			}
 		}
 		inFile.close();
-		rows_    = rows;
-		columns_ = columns;
+		rows_    = rows-1;
+		columns_ = columns-1;
 	}
 }
 
