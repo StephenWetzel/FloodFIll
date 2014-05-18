@@ -149,7 +149,7 @@ void Grid::setColumns(const int &columns)
 
 string Grid::display() const
 {//output the grid with formatting	
-	char fillSymbol[2] = {' ', 'X'}; //symbols for empty, and filled respectively
+	char fillSymbol[3] = {' ', 'X', '.', 'O'}; //symbols for empty, and filled respectively
 	
   ostringstream os; 
   

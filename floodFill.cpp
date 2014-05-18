@@ -16,33 +16,33 @@
 using namespace std;
 
 
-void floodFill(Grid &g, int x, int y)
+void floodFill(Grid &g, int x, int y, int fillType = 2)
 {
 	cout << g;
+	cout << "\n("<<x<<", "<<y<<")";
+	
+	//boundaries:
 	if (x > g.getColumns() || x < 0) return;
 	if (y > g.getRows() || y < 0) return;
 	
-	
 	//std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	if (g[y][x] == 1)
-	{
+	if (g[y][x])
+	{//already filled in
 		return;
 	}
 	else
 	{//fill it in
-		g[y][x] = 1;
-		floodFill(g, x  , y+1);
-		floodFill(g, x+1, y  );
-		floodFill(g, x  , y-1);
-		floodFill(g, x-1, y  );
+		g[y][x] = fillType;
+		floodFill(g, x  , y+1, fillType);
+		floodFill(g, x+1, y  , fillType);
+		floodFill(g, x  , y-1, fillType);
+		floodFill(g, x-1, y  , fillType);
 	}
-	
-	
 	return;
 }
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	int gridSize = 5;
 	
@@ -57,7 +57,26 @@ int main(void)
 	//(9,2) is filled
 	//floodFill(fileGrid, 9, 2);
 	//floodFill(fileGrid, 16, 10);
-	floodFill(fileGrid, 20, 20);
+	//floodFill(fileGrid, 20, 20);
+	int fillColumn;
+	int fillRow;
+	
+	if (argc < 3)
+	{//starting point was not passed, get it from user
+		cout<<"\nEnter fill starting point: ";
+		cin >> fillColumn >> fillRow;
+	}
+	else if (argc >= 3)
+	{//starting point was passed in from command line
+		istringstream ss1(argv[1]);
+		ss1 >> fillColumn;
+		
+		istringstream ss2(argv[2]);
+		ss2 >> fillRow;
+	}
+	
+	floodFill(fileGrid, fillColumn, fillRow);
+	
 	cout << fileGrid;
 	
   cout<<"\n\n"; //clean up output
