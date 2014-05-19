@@ -49,9 +49,6 @@ Grid::Grid(
 		for (int jj = 0; jj < columns_; jj++)
 		{//go through each column in a row and print peg
 			grid_[ii][jj] = matrix[ii][jj];
-			
-			
-			
 		}
 	}
 }
@@ -77,19 +74,19 @@ Grid::Grid(string fileName)
 			else if (ch == '0')
 			{//an empty cell
 				grid_[ii][jj] = 0;
-				jj++;
+				jj++; //count this column
 			}
 			else if (ch == '\n')
 			{//newline
-				ii++;
-				jj=0;
+				ii++; //count this row
+				jj=0; //reset column
 			}
 			
 			if (ii >= rows)
 			{//resize grid to add a new row
-				rows = ii+1;
+				rows = ii+1; //start counting at 1
 				grid_.resize(rows);
-				grid_[ii].resize(columns);
+				grid_[ii].resize(columns); //resize this row to full column width
 			}
 			if (jj >= columns)
 			{//resize grid to add a new column
